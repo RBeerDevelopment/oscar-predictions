@@ -1,0 +1,1 @@
+ALTER TABLE nominees ADD `tmdb_poster_blurhash` text;
