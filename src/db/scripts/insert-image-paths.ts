@@ -19,8 +19,6 @@ async function insertPosterPaths() {
     type: entry.type,
   }));
 
-  console.log(entries);
-
   const pathPromises = entries.map((entry) =>
     getImagePath(entry.id ?? "", (entry.type ?? "movie") as EntityType)
   );

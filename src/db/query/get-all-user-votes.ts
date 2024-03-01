@@ -39,8 +39,6 @@ export const getAllUserVotes = cache(
       },
     });
 
-    console.log(JSON.stringify(data.filter((d) => d.categoryId === 1)));
-
     return data
       .map((entry) => {
         return UserVote.parse({
