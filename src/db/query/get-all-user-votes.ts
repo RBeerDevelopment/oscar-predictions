@@ -15,6 +15,7 @@ export const getAllUserVotes = cache(
         votesToNominations: {
           columns: {
             description: true,
+            isWinner: true,
           },
           with: {
             nominee: {
@@ -59,6 +60,7 @@ export const getAllUserVotes = cache(
             secondaryNomineePosterPath:
               entry.votesToNominations.secondaryMovieNominee?.tmdbPosterPath ??
               null,
+            isWinner: Boolean(entry.votesToNominations.isWinner),
           },
         });
       })

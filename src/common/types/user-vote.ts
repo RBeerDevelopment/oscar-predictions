@@ -15,6 +15,7 @@ export const UserVote = z.object({
     secondaryNomineeName: z.string().nullable(),
     secondaryNomineeTmdbId: z.string().nullable(),
     secondaryNomineePosterPath: z.string().nullable(),
+    isWinner: z.boolean(),
   }),
 });
 

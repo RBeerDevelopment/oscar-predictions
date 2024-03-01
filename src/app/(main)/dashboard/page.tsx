@@ -12,22 +12,12 @@ import { RankedVotesTable } from "@/components/dashboard/ranked-votes-table";
 import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CorrectPredictionsCard } from "@/components/dashboard/correct-predictions-card";
+import { Button } from "@/components/ui/button";
+import { isAfterCeremony } from "@/common/utils/isAfterCeremony";
 
 export default async function DashboardPage() {
   const { userId } = auth();
-
-  // if (!userVotes || userVotes.length === 0) {
-  //   return (
-  //     <div className="flex flex-col h-full w-full items-center justify-center gap-2">
-  //       <p>No predictions yet, start here:</p>
-  //       <Link href="/vote">
-  //         <Button variant="link" className="text-xl font-semibold">
-  //           Start your predictions
-  //         </Button>
-  //       </Link>
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -36,17 +26,26 @@ export default async function DashboardPage() {
         opts={{ loop: true }}
       >
         <CarouselContent>
-          <CarouselItem className="md:basis-1/3">
-            <DashboardCard title="Your Predictions">
-              <Suspense fallback={<Skeleton className="h-full w-10" />}>
-                <OwnPredictionsTable userId={userId ?? ""} />
-              </Suspense>
-            </DashboardCard>
-          </CarouselItem>
+          {isAfterCeremony() ? (
+            <CarouselItem className="md:basis-1/3">
+              <DashboardCard title="Correct predictions">
+                <Suspense fallback={<Skeleton className="h-full w-10" />}>
+                  <CorrectPredictionsCard userId={userId ?? ""} />
+                </Suspense>
+              </DashboardCard>
+            </CarouselItem>
+          ) : null}
           <CarouselItem className="md:basis-1/3">
             <DashboardCard title="Ranked">
               <Suspense fallback={<Skeleton className="h-full w-10" />}>
                 <RankedVotesTable userId={userId ?? ""} />
+              </Suspense>
+            </DashboardCard>
+          </CarouselItem>
+          <CarouselItem className="md:basis-1/3">
+            <DashboardCard title="Your Predictions">
+              <Suspense fallback={<Skeleton className="h-full w-10" />}>
+                <OwnPredictionsTable userId={userId ?? ""} />
               </Suspense>
             </DashboardCard>
           </CarouselItem>
