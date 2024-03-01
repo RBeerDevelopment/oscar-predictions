@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -14,6 +15,7 @@ import { NomineeTableCell } from "../tables/nominee-table-cell";
 
 import { StatsCarousel } from "./stats-carousel";
 import { SectionHeader } from "./section-header";
+import { WinningMedal } from "../winning-medal";
 
 export const StatsSection: FC = async () => {
   const voteCounts = await getVoteCounts();
@@ -60,7 +62,13 @@ export const StatsSection: FC = async () => {
                         <TableRow
                           key={nominee.nomineeName + nominee.categoryId}
                         >
-                          <RankTableCell rank={idx + 1} />
+                          {Boolean(nominee.isWinner) ? (
+                            <TableCell>
+                              <WinningMedal isInverted />
+                            </TableCell>
+                          ) : (
+                            <RankTableCell rank={idx + 1} />
+                          )}
                           <NomineeTableCell
                             title={nominee.nomineeName}
                             tmdbId={nominee.tmdbId}
