@@ -15,6 +15,7 @@ export const getAllUserVotes = cache(
         votesToNominations: {
           columns: {
             description: true,
+            isWinner: true,
           },
           with: {
             nominee: {
@@ -38,6 +39,8 @@ export const getAllUserVotes = cache(
       },
     });
 
+    console.log(JSON.stringify(data.filter((d) => d.categoryId === 1)));
+
     return data
       .map((entry) => {
         return UserVote.parse({
@@ -59,6 +62,7 @@ export const getAllUserVotes = cache(
             secondaryNomineePosterPath:
               entry.votesToNominations.secondaryMovieNominee?.tmdbPosterPath ??
               null,
+            isWinner: Boolean(entry.votesToNominations.isWinner),
           },
         });
       })
