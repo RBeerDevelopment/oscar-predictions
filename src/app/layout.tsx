@@ -7,6 +7,7 @@ import { Footer } from "@/components/footer";
 
 import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -42,6 +43,7 @@ export default function RootLayout({
           <div className="h-full overflow-y-hidden">{children}</div>
           <Footer />
           <Analytics />
+          <SpeedInsights />
         </body>
       </html>
     </ClerkProvider>
