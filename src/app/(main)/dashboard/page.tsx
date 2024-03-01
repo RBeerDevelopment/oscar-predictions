@@ -13,7 +13,7 @@ import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CorrectPredictionsCard } from "@/components/dashboard/correct-predictions-card";
-import { Button } from "@/components/ui/button";
+
 import { isAfterCeremony } from "@/common/utils/isAfterCeremony";
 
 export default async function DashboardPage() {
