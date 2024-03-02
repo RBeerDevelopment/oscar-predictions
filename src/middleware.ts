@@ -2,7 +2,13 @@ import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 export default authMiddleware({
-  publicRoutes: ["/", "/image", "/image/iphone.png", "/opengraph-image"],
+  publicRoutes: [
+    "/",
+    "/image",
+    "/image/iphone.png",
+    "/opengraph-image",
+    "/imprint",
+  ],
   afterAuth(auth, req, evt) {
     if (
       req.nextUrl.pathname === "/admin" &&

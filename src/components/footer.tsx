@@ -17,6 +17,7 @@ export const Footer: FC = () => {
           />
         </a>
       </div>
+      <p className="text-white text-sm font-light self-center pt-1">Imprint</p>
     </footer>
   );
 };
