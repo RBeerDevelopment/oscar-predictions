@@ -2,6 +2,9 @@ import { FC } from "react";
 import Image from "next/image";
 import { LeaveFeedbackDialog } from "./feedback/leave-feedback-dialog";
 
+import { Button } from "./ui/button";
+import Link from "next/link";
+
 export const Footer: FC = () => {
   return (
     <footer className="w-full z-100 bg-gray-900 flex flex-col py-2 justify-evenly flex-shrink-0 mt-auto">
@@ -17,7 +20,12 @@ export const Footer: FC = () => {
           />
         </a>
       </div>
-      <p className="text-white text-sm font-light self-center pt-1">Imprint</p>
+      <Button
+        variant="link"
+        className="text-white text-sm font-light self-center pt-1"
+      >
+        <Link href="/imprint">Imprint</Link>
+      </Button>
     </footer>
   );
 };
