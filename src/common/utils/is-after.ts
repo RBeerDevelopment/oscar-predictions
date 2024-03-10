@@ -1,4 +1,4 @@
-import { isDateAfterAnother } from "./isDateAfterAnother";
+import { isDateAfterAnother } from "./is-date-after-another";
 
 const convertDateToUTC = (date: Date) => {
   return new Date(
@@ -12,8 +12,13 @@ const convertDateToUTC = (date: Date) => {
 };
 
 export const isAfterCeremony = (): boolean => {
-  const estimatedCeremonyEnd = new Date(2024, 2, 11, 4, 0);
   const nowInUTC = convertDateToUTC(new Date());
 
-  return isDateAfterAnother(nowInUTC, estimatedCeremonyEnd);
+  return isDateAfterAnother(nowInUTC, ESTIMATED_CEREMONY_END);
+};
+
+export const isAfterCeremonyStart = (): boolean => {
+  const nowInUTC = convertDateToUTC(new Date());
+
+  return isDateAfterAnother(nowInUTC, CEREMONY_START);
 };

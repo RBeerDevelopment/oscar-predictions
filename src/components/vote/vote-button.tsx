@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { useUser } from "@clerk/nextjs";
 import { voteForNomination } from "@/db/actions/vote-for-nomination";
 import { cn } from "@/lib/utils";
+import { isAfterCeremony, isAfterCeremonyStart } from "@/common/utils/is-after";
 
 export const VoteButton: FC<{
   categoryId: number;
@@ -15,6 +16,10 @@ export const VoteButton: FC<{
   const { user } = useUser();
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const isVotingOver = isAfterCeremonyStart();
+
+  if (isVotingOver) return null;
   return (
     <Button
       onClick={async (e) => {
