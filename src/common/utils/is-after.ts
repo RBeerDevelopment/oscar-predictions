@@ -1,3 +1,4 @@
+import { CEREMONY_START, ESTIMATED_CEREMONY_END } from "../constants";
 import { isDateAfterAnother } from "./is-date-after-another";
 
 const convertDateToUTC = (date: Date) => {
