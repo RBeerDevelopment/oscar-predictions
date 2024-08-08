@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: "https://www.oscar-predictions.com/imprint",
-      lastModified: new Date(),
+      lastModified: new Date("2024-08-07"),
       changeFrequency: "yearly",
       priority: 0.2,
     },
