@@ -11,7 +11,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { buildImageUrl } from "@/common/utils/build-image-url";
 import { getAllUserVotes } from "@/db/query/get-all-user-votes";
-import { WinningMedal } from "../winning-medal";
 
 export const CorrectPredictionsCard: FC<{
   userId: string;
