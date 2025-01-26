@@ -15,9 +15,9 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "Oscar Predictions 2024",
+  title: "Oscar Predictions 2025",
   description:
-    "Collect your Oscar Predictions in one place for the 2024 Academy Awards",
+    "Collect your Oscar Predictions in one place for the 2025 Academy Awards",
   metadataBase: new URL("https://www.oscar-predictions.com"),
   openGraph: {
     type: "website",

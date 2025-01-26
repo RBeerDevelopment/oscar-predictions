@@ -9,7 +9,7 @@ export const FeatureSection: FC = () => {
       <div className="container px-4 grid items-center gap-6 md:px-6 lg:grid-cols-2 lg:gap-10">
         <SectionHeader
           title="Features"
-          subtitle="One place to keep track of all your predictions for the 2024 Academy Awards."
+          subtitle="One place to keep track of all your predictions for the 2025 Academy Awards."
         />
         <div className="grid items-start gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-1">
           <FeatureEntry

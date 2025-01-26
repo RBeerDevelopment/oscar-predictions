@@ -62,10 +62,7 @@ export const LeaveFeedbackDialog: FC = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          variant="default"
-          className="text-white w-fit self-center text-sm h-12"
-        >
+        <Button variant="link" className="text-white w-fit self-center text-sm">
           Leave Feedback
         </Button>
       </DialogTrigger>

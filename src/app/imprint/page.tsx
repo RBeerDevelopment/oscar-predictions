@@ -3,7 +3,7 @@ export default async function ImprintPage() {
     <div className="w-full flex flex-col items-center overflow-y-scroll h-full py-4">
       <div className="w-full lg:w-[80ch]">
         <h1 className="font-semibold text-2xl">Data Privacy Policy</h1>
-        <p>As of March 2, 2024</p>
+        <p>As of January 26, 2025</p>
         <h2 className="text-xl font-semibold">Table of Contents</h2>
         <ul className="list-disc font-semibold py-4 space-y-4 pl-6">
           <li>
