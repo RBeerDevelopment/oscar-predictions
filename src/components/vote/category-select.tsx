@@ -13,10 +13,8 @@ import { useRouter } from "next/navigation";
 export const CategorySelect: FC<{
   categoryId: number;
   categories: {
-    hasVoted: boolean;
     id: number;
     name: string | null;
-    type: "movie" | "person" | "song" | null;
   }[];
 }> = ({ categoryId, categories }) => {
   const router = useRouter();
