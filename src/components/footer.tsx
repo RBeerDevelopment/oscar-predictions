@@ -7,8 +7,16 @@ import Link from "next/link";
 
 export const Footer: FC = () => {
   return (
-    <footer className="w-full z-100 bg-gray-900 flex flex-col py-2 justify-evenly flex-shrink-0 mt-auto">
-      <LeaveFeedbackDialog />
+    <footer className="w-full z-100 bg-gray-900 flex flex-col py-0.5 justify-evenly flex-shrink-0 mt-auto">
+      <div className="flex flex-row items-center justify-center">
+        <Button
+          variant="link"
+          className="text-white text-sm font-light self-center"
+        >
+          <Link href="/imprint">Imprint</Link>
+        </Button>
+        <LeaveFeedbackDialog />
+      </div>
       <div className="flex flex-row gap-1 items-center justify-center">
         <p className="text-xs text-white">Powered by</p>
         <a href="https://www.themoviedb.org" target="_blank">
@@ -20,12 +28,6 @@ export const Footer: FC = () => {
           />
         </a>
       </div>
-      <Button
-        variant="link"
-        className="text-white text-sm font-light self-center pt-1"
-      >
-        <Link href="/imprint">Imprint</Link>
-      </Button>
     </footer>
   );
 };
