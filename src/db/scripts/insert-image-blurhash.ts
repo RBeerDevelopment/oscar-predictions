@@ -3,7 +3,7 @@ import { db } from "../db";
 import { encode } from "blurhash";
 import sharp from "sharp";
 import { nominees } from "../schema";
-import { eq } from "drizzle-orm";
+import { and, eq, isNotNull, isNull } from "drizzle-orm";
 
 async function getImageBuffer(source: string) {
   const response = await fetch(source);
@@ -38,6 +38,10 @@ async function insertImageBlurhash() {
       tmdbPosterPath: true,
       id: true,
     },
+    where: and(
+      isNull(nominees.tmdbPosterBlurhash),
+      isNotNull(nominees.tmdbPosterPath)
+    ),
   });
 
   if (!data) return;
