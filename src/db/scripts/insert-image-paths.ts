@@ -1,7 +1,7 @@
 import { getImagePath } from "@/tmdb-api/get-image-href";
 import { db } from "../db";
 import { nominees } from "../schema";
-import { eq } from "drizzle-orm";
+import { eq, isNull } from "drizzle-orm";
 
 async function insertPosterPaths() {
   console.time("insert");
@@ -10,7 +10,7 @@ async function insertPosterPaths() {
       tmdbId: true,
       type: true,
     },
-    where: eq(nominees.tmdbPosterPath, ""),
+    where: isNull(nominees.tmdbPosterPath),
   });
 
   if (!data) return;
