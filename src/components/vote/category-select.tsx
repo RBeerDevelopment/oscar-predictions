@@ -16,7 +16,7 @@ export const CategorySelect: FC<{
     hasVoted: boolean;
     id: number;
     name: string | null;
-    type: "movie" | "person" | null;
+    type: "movie" | "person" | "song" | null;
   }[];
 }> = ({ categoryId, categories }) => {
   const router = useRouter();
