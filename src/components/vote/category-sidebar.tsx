@@ -1,17 +1,47 @@
-import { getCategories } from "@/db/query/get-categories";
-import { auth } from "@clerk/nextjs";
+"use client";
+
 import Link from "next/link";
-import { FC } from "react";
+import { FC, useEffect, useRef } from "react";
 import { DoneIcon } from "./done-icon";
 
-export const CategorySidebar: FC<{ categoryId: number }> = async ({
-  categoryId,
-}) => {
-  const { userId } = auth();
-  const categories = await getCategories(userId ?? "");
+type Category = {
+  hasVoted: boolean;
+  id: number;
+  name: string | null;
+  type: "movie" | "person" | "song" | null;
+};
+
+const STORAGE_KEY = "category-sidebar-scroll";
+
+export const CategorySidebar: FC<{
+  categoryId: number;
+  categories: Category[];
+}> = ({ categoryId, categories }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const savedPosition = sessionStorage.getItem(STORAGE_KEY);
+    if (savedPosition === null) return;
+
+    containerRef.current.scrollTop = Number(savedPosition);
+  }, []);
+
+  const saveScrollPosition = () => {
+    if (containerRef.current) {
+      sessionStorage.setItem(
+        STORAGE_KEY,
+        String(containerRef.current.scrollTop)
+      );
+    }
+  };
 
   return (
-    <div className="xl:flex flex-col py-4 hidden w-2/3 max-w-xs bg-gray-50 shadow-md px-2 overflow-y-scroll gap-2 h-full">
+    <div
+      ref={containerRef}
+      onScroll={saveScrollPosition}
+      className="xl:flex flex-col py-4 hidden w-2/3 max-w-xs bg-gray-50 shadow-md px-2 overflow-y-scroll gap-2 h-full"
+    >
       {categories.map((category) => (
         <Link
           href={`/vote/${category.id}`}

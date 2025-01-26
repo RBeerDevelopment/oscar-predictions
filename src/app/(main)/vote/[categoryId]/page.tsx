@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs";
 import { getCategories } from "@/db/query/get-categories";
 import { CategorySelect } from "@/components/vote/category-select";
-import { CategorySidebar } from "@/components/vote/category-sidebar";
+import { CategorySidebarWrapper } from "@/components/vote/category-sidebar-wrapper";
 
 export default async function VotePage({
   params,
@@ -30,7 +30,7 @@ export default async function VotePage({
 
   return (
     <div className="flex flex-col xl:flex-row gap-2 h-screen overflow-y-hidden">
-      <CategorySidebar categoryId={categoryId} />
+      <CategorySidebarWrapper categoryId={categoryId} />
       <div className="xl:hidden block pt-2 px-4">
         <CategorySelect categoryId={categoryId} categories={categories} />
       </div>
