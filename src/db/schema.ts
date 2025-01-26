@@ -13,7 +13,7 @@ export const nominees = sqliteTable("nominees", {
   tmdbId: text("tmdb_id").unique(),
   tmdbPosterPath: text("tmdb_poster_path"),
   tmdbPosterBlurhash: text("tmdb_poster_blurhash"),
-  type: text("type", { enum: ["movie", "person"] }),
+  type: text("type", { enum: ["movie", "person", "song"] }),
 });
 
 export const nomineesRelations = relations(nominees, ({ many }) => ({
@@ -26,7 +26,7 @@ export const nomineesRelations = relations(nominees, ({ many }) => ({
 export const categories = sqliteTable("categories", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").unique(),
-  type: text("type", { enum: ["movie", "person"] }),
+  type: text("type", { enum: ["movie", "person", "song"] }),
 });
 
 export const categoriesRelations = relations(categories, ({ many }) => ({
