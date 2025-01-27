@@ -27,17 +27,7 @@ export const CategorySelect: FC<{
       <SelectTrigger>
         <SelectValue placeholder="Category" />
       </SelectTrigger>
-      <SelectContent
-        ref={(ref) => {
-          if (!ref) return;
-          ref.ontouchstart = (e) => {
-            e.preventDefault();
-          };
-          ref.ontouchend = (e) => {
-            e.preventDefault();
-          };
-        }}
-      >
+      <SelectContent>
         {categories.map((category) => (
           <SelectItem key={category.id} value={String(category.id)}>
             {category.name}

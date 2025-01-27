@@ -1,7 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
-import { Inter as FontSans } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
@@ -9,9 +8,9 @@ import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const fontSans = FontSans({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -32,13 +31,8 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en" title="Oscar Predictions">
-        <body
-          className={cn(
-            "bg-background font-sans antialiased h-screen flex flex-col",
-            fontSans.variable
-          )}
-        >
+      <html lang="en" title="Oscar Predictions" className={inter.className}>
+        <body className="bg-background font-sans antialiased h-screen flex flex-col">
           <Header />
           <div className="h-full overflow-y-hidden">{children}</div>
           <Footer />
