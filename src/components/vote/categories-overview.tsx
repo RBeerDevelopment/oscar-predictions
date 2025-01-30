@@ -1,10 +1,10 @@
 import { getCategories } from "@/db/query/get-categories";
 import { FC } from "react";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { CategoryElement } from "./category-element";
 
 export const CategoriesOverview: FC = async () => {
-  const { userId } = auth();
+  const { userId } = await auth();
   const categories = await getCategories(userId ?? "");
 
   const sortedCategories = categories.sort((a, b) => {

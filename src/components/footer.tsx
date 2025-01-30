@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export const Footer: FC = () => {
   return (
-    <footer className="w-full z-100 bg-gray-900 flex flex-col py-0.5 justify-evenly flex-shrink-0 mt-auto">
+    <footer className="w-full z-100 bg-gray-900 flex flex-col py-0.5 justify-evenly shrink-0 mt-auto">
       <div className="flex flex-row items-center justify-center">
         <Button
           variant="link"

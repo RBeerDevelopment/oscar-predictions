@@ -33,7 +33,7 @@ export const NomineeCard: FC<{
           src={buildImageUrl(nominee.tmdbPosterPath, true)}
           alt={`Poster of ${nominee.name}`}
           blurDataURL={blurhashUrl}
-          placeholder="blur"
+          placeholder="blur-sm"
           width={400}
           height={600}
         />
