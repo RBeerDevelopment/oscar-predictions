@@ -1,10 +1,12 @@
-import { SignInButton, UserButton, auth } from "@clerk/nextjs";
+import { SignInButton, UserButton } from "@clerk/nextjs";
+
 import Link from "next/link";
 import { FC } from "react";
 import { HeaderNavigation } from "./header-navigation";
+import { auth } from "@clerk/nextjs/server";
 
-export const Header: FC = () => {
-  const { userId } = auth();
+export const Header: FC = async () => {
+  const { userId } = await auth();
 
   const isSignedIn = Boolean(userId);
 
@@ -18,9 +20,9 @@ export const Header: FC = () => {
       {isSignedIn ? <HeaderNavigation /> : null}
       <div className="flex flex-row gap-3 ml-auto">
         {isSignedIn ? (
-          <UserButton afterSignOutUrl="/" />
+          <UserButton />
         ) : (
-          <SignInButton afterSignInUrl="/dashboard" />
+          <SignInButton mode="modal" forceRedirectUrl="/dashboard" />
         )}
       </div>
     </nav>

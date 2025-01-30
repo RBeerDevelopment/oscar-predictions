@@ -28,7 +28,7 @@ export const HeroSection: FC = () => {
               </p>
             </div>
             <div className="space-x-4">
-              <SignInButton afterSignInUrl="/vote">
+              <SignInButton forceRedirectUrl="/vote">
                 <Button className="bg-pink-600">Get Started</Button>
               </SignInButton>
             </div>
