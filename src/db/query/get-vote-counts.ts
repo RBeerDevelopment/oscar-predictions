@@ -1,4 +1,4 @@
-import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { db } from "../db";
 import { sql } from "drizzle-orm";
 
@@ -12,8 +12,9 @@ type VoteCount = {
   tmdbPosterPath: string;
 };
 
-export const getVoteCounts = cache(async () => {
-  const statement = sql`
+export const getVoteCounts = unstable_cache(
+  async () => {
+    const statement = sql`
     SELECT 
       nominations.is_winner as isWinner, categories.id as categoryId, categories.name as categoryName, nominees.name as nomineeName, nominees.tmdb_id as tmdbId, nominees.tmdb_poster_path as tmdbPosterPath, COUNT(votes.user_id) as voteCount FROM categories 
         INNER JOIN nominations ON categories.id = nominations.category_id
@@ -23,7 +24,10 @@ export const getVoteCounts = cache(async () => {
         ORDER BY categoryId, voteCount DESC;
   `;
 
-  const data = await db.all<VoteCount>(statement).execute();
+    const data = await db.all<VoteCount>(statement).execute();
 
-  return data;
-});
+    return data;
+  },
+  [],
+  { revalidate: false }
+);

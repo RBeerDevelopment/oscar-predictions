@@ -1,29 +1,27 @@
-import { SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 import Link from "next/link";
 import { FC } from "react";
 import { HeaderNavigation } from "./header-navigation";
-import { auth } from "@clerk/nextjs/server";
 
 export const Header: FC = async () => {
-  const { userId } = await auth();
-
-  const isSignedIn = Boolean(userId);
-
   return (
     <nav className="w-full z-10 bg-gray-950 text-white flex flex-row py-4 px-6 justify-start gap-12 shadow-md items-center">
-      <Link href={isSignedIn ? "/dashboard" : "/"}>
+      <Link href="/">
         <h1 className="font-semibold text-2xl cursor-pointer">
           Oscar Predictions
         </h1>
       </Link>
-      {isSignedIn ? <HeaderNavigation /> : null}
+      <SignedIn>
+        <HeaderNavigation />
+      </SignedIn>
       <div className="flex flex-row gap-3 ml-auto">
-        {isSignedIn ? (
+        <SignedIn>
           <UserButton />
-        ) : (
+        </SignedIn>
+        <SignedOut>
           <SignInButton mode="modal" forceRedirectUrl="/dashboard" />
-        )}
+        </SignedOut>
       </div>
     </nav>
   );

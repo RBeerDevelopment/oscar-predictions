@@ -33,7 +33,7 @@ export default function RootLayout({
     <ClerkProvider afterSignOutUrl="/">
       <html lang="en" title="Oscar Predictions" className={inter.className}>
         <body className="bg-background font-sans antialiased h-screen flex flex-col">
-          <Header />
+          {/* <Header /> */}
           <div className="h-full overflow-y-hidden">{children}</div>
           <Footer />
           <Analytics />
