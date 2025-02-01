@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, useState } from "react";
-import { auth, useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 
 import {
   Dialog,

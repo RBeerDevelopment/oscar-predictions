@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 import {
   Carousel,
@@ -13,11 +13,10 @@ import { DashboardCard } from "@/components/dashboard/dashboard-card";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CorrectPredictionsCard } from "@/components/dashboard/correct-predictions-card";
-import { Button } from "@/components/ui/button";
 import { isAfterCeremony } from "@/common/utils/is-after";
 
 export default async function DashboardPage() {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   return (
     <div className="flex flex-col w-full h-full">

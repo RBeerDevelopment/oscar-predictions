@@ -1,7 +1,13 @@
 import { db } from "@/db/db";
 import { AdminSelectSection } from "./admin-select-section";
+import { auth } from "@clerk/nextjs/server";
 
 export default async function AdminPage() {
+  const { redirectToSignIn, userId } = await auth();
+  if (userId !== process.env.ADMIN_USER_ID) {
+    redirectToSignIn();
+  }
+
   const categories = await db.query.categories.findMany({
     columns: { id: true, name: true },
   });

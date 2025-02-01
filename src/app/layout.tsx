@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignOutUrl="/">
       <html lang="en" title="Oscar Predictions" className={inter.className}>
         <body className="bg-background font-sans antialiased h-screen flex flex-col">
           <Header />

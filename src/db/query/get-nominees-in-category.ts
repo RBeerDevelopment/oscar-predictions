@@ -1,6 +1,7 @@
 import { Nominee } from "@/common/types/nominee";
 import { db } from "../db";
 import { cache } from "react";
+import { EntityType } from "@/common/types/entity-type";
 
 export const getNomineesInCategory = cache(
   async (categoryId: number): Promise<Nominee[]> => {

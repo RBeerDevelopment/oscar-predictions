@@ -4,7 +4,7 @@ import { Badge } from "../ui/badge";
 export const FeatureEntry: FC<{
   title: string;
   description: string;
-  icon: ReactElement;
+  icon: ReactElement & { props: { className?: string } };
   isComingSoon?: boolean;
 }> = ({ title, description, icon, isComingSoon = false }) => {
   const headerIcon = cloneElement(icon, {

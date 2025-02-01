@@ -3,7 +3,7 @@ import { getCategoryDetails } from "@/db/query/get-category-details";
 import { getNomineesInCategory } from "@/db/query/get-nominees-in-category";
 import { getExistingUserVote } from "@/db/query/get-existing-user-vote";
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { getCategories } from "@/db/query/get-categories";
 import { CategorySelect } from "@/components/vote/category-select";
 import { CategorySidebarWrapper } from "@/components/vote/category-sidebar-wrapper";
@@ -11,14 +11,14 @@ import { CategorySidebarWrapper } from "@/components/vote/category-sidebar-wrapp
 export default async function VotePage({
   params,
 }: {
-  params: { categoryId: string };
+  params: Promise<{ categoryId: string }>;
 }) {
-  const categoryId = Number(params.categoryId);
+  const categoryId = Number((await params).categoryId);
   if (isNaN(categoryId)) {
     redirect("/vote");
   }
 
-  const { userId } = auth();
+  const { userId } = await auth();
 
   const [categories, categoryDetails, nomineesInCategory, existingUserVote] =
     await Promise.all([

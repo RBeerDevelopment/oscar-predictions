@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { FC, useEffect, useRef } from "react";
 import { DoneIcon } from "./done-icon";
+import type { EntityType } from "@/common/types/entity-type";
 
 type Category = {
   hasVoted: boolean;
   id: number;
   name: string | null;
-  type: "movie" | "person" | "song" | null;
+  type: EntityType | null;
 };
 
 const STORAGE_KEY = "category-sidebar-scroll";
