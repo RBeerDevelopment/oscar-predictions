@@ -1,3 +1,5 @@
+import { EntityType } from "./entity-type";
+
 export type Nominee = {
   nominationId: number;
   name: string;

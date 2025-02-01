@@ -11,9 +11,9 @@ import { CategorySidebarWrapper } from "@/components/vote/category-sidebar-wrapp
 export default async function VotePage({
   params,
 }: {
-  params: { categoryId: string };
+  params: Promise<{ categoryId: string }>;
 }) {
-  const categoryId = Number(params.categoryId);
+  const categoryId = Number((await params).categoryId);
   if (isNaN(categoryId)) {
     redirect("/vote");
   }
