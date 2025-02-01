@@ -2,6 +2,7 @@ import { getImagePath } from "@/tmdb-api/get-image-href";
 import { db } from "../db";
 import { nominees } from "../schema";
 import { eq, isNull, and, ne } from "drizzle-orm";
+import { EntityType } from "@/common/types/entity-type";
 
 async function insertPosterPaths() {
   console.time("insert");

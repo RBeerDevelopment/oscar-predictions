@@ -1,3 +1,4 @@
+import { EntityType } from "@/common/types/entity-type";
 import { relations } from "drizzle-orm";
 import {
   sqliteTable,
@@ -13,7 +14,7 @@ export const nominees = sqliteTable("nominees", {
   tmdbId: text("tmdb_id").unique(),
   tmdbPosterPath: text("tmdb_poster_path"),
   tmdbPosterBlurhash: text("tmdb_poster_blurhash"),
-  type: text("type", { enum: ["movie", "person", "song"] }),
+  type: text("type", { enum: EntityType }),
 });
 
 export const nomineesRelations = relations(nominees, ({ many }) => ({
@@ -26,7 +27,7 @@ export const nomineesRelations = relations(nominees, ({ many }) => ({
 export const categories = sqliteTable("categories", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").unique(),
-  type: text("type", { enum: ["movie", "person", "song"] }),
+  type: text("type", { enum: EntityType }),
 });
 
 export const categoriesRelations = relations(categories, ({ many }) => ({

@@ -1,5 +1,6 @@
 import { TmdbImageResponse } from "@/common/types/tmdb-image-response";
-import { TMDB_API_BASE_URL, TMDB_IMAGE_BASE_URL } from "./const";
+import { TMDB_API_BASE_URL } from "./const";
+import { EntityType } from "@/common/types/entity-type";
 
 export async function getImagePath(
   entityId: string,
@@ -17,7 +18,9 @@ export async function getImagePath(
   const data: TmdbImageResponse = await result.json();
 
   const filePath =
-    data?.[type === "movie" ? "posters" : "profiles"]?.at(0)?.file_path;
+    data?.[type === "movie" || type === "song" ? "posters" : "profiles"]?.at(
+      0
+    )?.file_path;
 
   return filePath ?? "";
 }
