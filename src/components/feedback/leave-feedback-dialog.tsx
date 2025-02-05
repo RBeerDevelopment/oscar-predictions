@@ -1,7 +1,6 @@
 "use client";
 
 import { FC, useState } from "react";
-import { useUser } from "@clerk/nextjs";
 
 import {
   Dialog,
@@ -41,7 +40,6 @@ export const LeaveFeedbackDialog: FC = () => {
   const { pending } = useFormStatus();
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const { user } = useUser();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,10 +49,7 @@ export const LeaveFeedbackDialog: FC = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await shareFeedback(
-      values.feedback,
-      values.shareEmail ? user?.primaryEmailAddress?.emailAddress ?? null : null
-    );
+    await shareFeedback(values.feedback, null);
     setIsSubmitted(true);
     form.reset();
   };
@@ -62,7 +57,10 @@ export const LeaveFeedbackDialog: FC = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="link" className="text-white w-fit self-center text-sm">
+        <Button
+          variant="link"
+          className="text-white w-fit self-center text-sm p-2"
+        >
           Leave Feedback
         </Button>
       </DialogTrigger>
@@ -95,29 +93,6 @@ export const LeaveFeedbackDialog: FC = () => {
                       </FormItem>
                     )}
                   />
-                  {Boolean(user?.id) ? (
-                    <FormField
-                      control={form.control}
-                      name="shareEmail"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <div className="space-y-1 leading-none">
-                            <FormLabel>Share my email</FormLabel>
-                            <FormDescription>
-                              If you want me to get back to you, please share
-                              your email address.
-                            </FormDescription>
-                          </div>
-                        </FormItem>
-                      )}
-                    />
-                  ) : null}
                   <Button
                     disabled={pending}
                     aria-disabled={pending}

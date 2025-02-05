@@ -1,8 +1,8 @@
-import { SignInButton } from "@clerk/nextjs";
-
 import { FC } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import logoImage from "../../../public/logo.webp";
+import Link from "next/link";
 
 export const HeroSection: FC = () => {
   return (
@@ -12,9 +12,8 @@ export const HeroSection: FC = () => {
           <Image
             priority={true}
             className="w-full h-full md:hidden"
-            src="/logo.webp"
+            src={logoImage}
             alt="Oscar Predictions logo"
-            width={400}
             height={400}
           />
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -28,9 +27,11 @@ export const HeroSection: FC = () => {
               </p>
             </div>
             <div className="space-x-4">
-              <SignInButton forceRedirectUrl="/vote">
-                <Button className="bg-pink-600">Get Started</Button>
-              </SignInButton>
+              <Link href="/dashboard">
+                <Button className="bg-pink-600 text-black hover:text-white">
+                  Get Started
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
