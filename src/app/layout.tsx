@@ -1,4 +1,3 @@
-import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/footer";
@@ -29,15 +28,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider afterSignOutUrl="/">
-      <html lang="en" title="Oscar Predictions" className={inter.className}>
-        <body className="bg-background font-sans antialiased min-h-screen flex flex-col overflow-y-scroll">
-          <div className="h-full overflow-y-hidden">{children}</div>
-          <Footer />
-          <Analytics />
-          <SpeedInsights />
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" title="Oscar Predictions" className={inter.className}>
+      <body className="bg-background font-sans antialiased min-h-screen flex flex-col overflow-y-scroll">
+        <div className="h-full overflow-y-hidden">{children}</div>
+        <Footer />
+        <Analytics />
+        <SpeedInsights />
+      </body>
+    </html>
   );
 }
