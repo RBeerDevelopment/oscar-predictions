@@ -1,5 +1,3 @@
-import { SignInButton } from "@clerk/nextjs";
-
 import { FC } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
@@ -29,7 +27,7 @@ export const HeroSection: FC = () => {
               </p>
             </div>
             <div className="space-x-4">
-              <Link href="/vote">
+              <Link href="/dashboard">
                 <Button className="bg-pink-600 text-black hover:text-white">
                   Get Started
                 </Button>

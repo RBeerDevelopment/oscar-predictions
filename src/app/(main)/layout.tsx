@@ -1,3 +1,4 @@
+import { MainHeader } from "@/components/main-header";
 import { TabNavigation } from "@/components/tab-navigation";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -8,6 +9,7 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex flex-col gap-2 w-full h-full overflow-hidden">
+      <MainHeader />
       <TabNavigation />
       {children}
       <Toaster />

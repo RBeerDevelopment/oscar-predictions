@@ -6,8 +6,10 @@ const isLandingPageRoute = createRouteMatcher(["/"]);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
+
   if (!isPublicRoute(req)) {
-    auth.protect();
+    await auth.protect();
+    return;
   }
 
   if (isLandingPageRoute(req) && userId !== null) {
