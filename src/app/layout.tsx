@@ -1,10 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/footer";
-
-import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,8 +29,6 @@ export default function RootLayout({
       <body className="bg-background font-sans antialiased min-h-screen flex flex-col overflow-y-scroll">
         <div className="h-full overflow-y-hidden">{children}</div>
         <Footer />
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );
