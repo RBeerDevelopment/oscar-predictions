@@ -11,9 +11,9 @@ import {
 import { useRouter } from "next/navigation";
 
 export const CategorySelect: FC<{
-  categoryId: number;
+  categoryId: string;
   categories: {
-    id: number;
+    id: string;
     name: string | null;
   }[];
 }> = ({ categoryId, categories }) => {
@@ -21,7 +21,7 @@ export const CategorySelect: FC<{
 
   return (
     <Select
-      value={String(categoryId)}
+      value={categoryId}
       onValueChange={(selectedId) => router.push(`/vote/${selectedId}`)}
     >
       <SelectTrigger>
@@ -29,7 +29,7 @@ export const CategorySelect: FC<{
       </SelectTrigger>
       <SelectContent>
         {categories.map((category) => (
-          <SelectItem key={category.id} value={String(category.id)}>
+          <SelectItem key={category.id} value={category.id}>
             {category.name}
           </SelectItem>
         ))}

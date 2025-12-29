@@ -1,38 +1,29 @@
 import { FC } from "react";
 import { Button } from "../ui/button";
-import Image from "next/image";
-import logoImage from "../../../public/logo.webp";
 import Link from "next/link";
+import Image from "next/image";
+import OscarLogo from '../../../public/oscars-logo.webp'
 
 export const HeroSection: FC = () => {
   return (
-    <section className="w-full md:min-h-[60vh]">
-      <div className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
-        <div className="container px-4 md:px-6">
-          <Image
-            priority={true}
-            className="w-full h-full md:hidden"
-            src={logoImage}
-            alt="Oscar Predictions logo"
-            height={400}
-          />
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                And the Oscar goes to...
-              </h1>
-              <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                Predict who&apos;s going to win the Acadamy Award in each
-                category this year.
-              </p>
-            </div>
-            <div className="space-x-4">
-              <Link href="/dashboard">
-                <Button className="bg-pink-600 text-black hover:text-white">
-                  Get Started
-                </Button>
-              </Link>
-            </div>
+    <section className="w-full">
+      <div className="container px-4 md:px-6 py-12 md:pt-32 md:pb-8 md:py-0">
+        <div className="flex flex-col items-center justify-center space-y-6 text-center">
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-black">
+              Vote for the Oscars.
+            </h1>
+            <p className="mx-auto max-w-[700px] text-gray-600 text-lg md:text-xl">
+              Choose your favorites and make them winners.
+            </p>
+          </div>
+          <Link href="/vote">
+            <Button className="bg-black text-white hover:bg-gray-800 rounded-lg px-8 py-6 text-lg">
+              Start Voting
+            </Button>
+          </Link>
+          <div className="w-full max-w-4xl h-64 md:h-96 bg-gray-200 rounded-xl mt-8 overflow-hidden relative">
+            <Image src={OscarLogo} alt="Hero Image" fill className="object-cover" />
           </div>
         </div>
       </div>

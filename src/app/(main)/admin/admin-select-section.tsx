@@ -10,21 +10,24 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { saveWinner } from "@/db/actions/save-winner";
+import { categories } from "@/db/schema";
+import { InferSelectModel } from "drizzle-orm";
+
+
+type MinimalCategory = Pick<InferSelectModel<typeof categories>, "id" | "name">;
+type NominationWithNomineeAndCategory = {
+  id: string;
+  categoryId: string;
+  nomineeName: string | null;
+  nomineeId: string;
+}
 
 export const AdminSelectSection: FC<{
-  categories: {
-    id: number;
-    name: string | null;
-  }[];
-  nominations: {
-    id: number;
-    categoryId: number;
-    nomineeName: string | null;
-    nomineeId: number;
-  }[];
+  nominations: NominationWithNomineeAndCategory[];
+  categories: MinimalCategory[];
 }> = ({ categories, nominations }) => {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number>();
-  const [selectedNominationId, setSelectedNominationId] = useState<number>();
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>();
+  const [selectedNominationId, setSelectedNominationId] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
 
   const onSave = async () => {
@@ -36,17 +39,18 @@ export const AdminSelectSection: FC<{
     setSelectedNominationId(undefined);
     setIsLoading(false);
   };
+  
   return (
     <>
       <Select
-        onValueChange={(newValue) => setSelectedCategoryId(Number(newValue))}
+        onValueChange={(newValue) => setSelectedCategoryId(newValue)}
       >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Category" />
         </SelectTrigger>
         <SelectContent>
           {categories.map((category) => (
-            <SelectItem key={category.id} value={String(category.id)}>
+            <SelectItem key={category.id} value={category.id}>
               {category.name}
             </SelectItem>
           ))}
@@ -56,7 +60,7 @@ export const AdminSelectSection: FC<{
       {selectedCategoryId !== undefined && (
         <Select
           onValueChange={(newValue) =>
-            setSelectedNominationId(Number(newValue))
+            setSelectedNominationId(newValue)
           }
         >
           <SelectTrigger className="w-[180px]">
@@ -68,7 +72,7 @@ export const AdminSelectSection: FC<{
                 (nomination) => nomination.categoryId === selectedCategoryId
               )
               .map((nomination) => (
-                <SelectItem key={nomination.id} value={String(nomination.id)}>
+                <SelectItem key={nomination.id} value={nomination.id}>
                   {nomination.nomineeName}
                 </SelectItem>
               ))}

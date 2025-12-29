@@ -1,1 +1,0 @@
-CREATE INDEX `user_id_index` ON `votes` (`user_id`);

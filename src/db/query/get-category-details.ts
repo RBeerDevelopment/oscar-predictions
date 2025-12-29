@@ -1,8 +1,8 @@
 import { cache } from "react";
 import { db } from "../db";
 
-export const getCategoryDetails = cache((id: number) => {
+export const getCategoryDetails = cache((id: string) => {
   return db.query.categories.findFirst({
-    where: (categories, { eq }) => eq(categories.id, id),
+    where: { id },
   });
 });

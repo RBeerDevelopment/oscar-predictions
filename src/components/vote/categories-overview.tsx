@@ -20,7 +20,7 @@ export const CategoriesOverview: FC = async () => {
           <CategoryElement
             key={category.id}
             id={category.id}
-            name={category.name}
+            name={category.name ?? ""}
             hasVoted={category.hasVoted}
           />
         ))}

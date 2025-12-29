@@ -5,14 +5,14 @@ import { UserVote } from "@/common/types/user-vote";
 export const getAllUserVotes = cache(
   async (userId: string): Promise<UserVote[]> => {
     const data = await db.query.votes.findMany({
-      where: (votes, { eq }) => eq(votes.userId, userId),
+      where: { userId },
 
       columns: {
         categoryId: true,
         nominationId: true,
       },
       with: {
-        votesToNominations: {
+        nomination: {
           columns: {
             description: true,
             isWinner: true,
@@ -25,12 +25,12 @@ export const getAllUserVotes = cache(
                 tmdbPosterPath: true,
               },
             },
-            secondaryMovieNominee: {
+            secondaryNominee: {
               columns: { name: true, tmdbId: true, tmdbPosterPath: true },
             },
           },
         },
-        votesToCategories: {
+        category: {
           columns: {
             name: true,
             type: true,
@@ -40,30 +40,31 @@ export const getAllUserVotes = cache(
     });
 
     return data
+      .filter((entry) => entry.category && entry.nomination && entry.nomination.nominee)
       .map((entry) => {
         return UserVote.parse({
           category: {
             id: entry.categoryId,
-            name: entry.votesToCategories.name,
-            type: entry.votesToCategories.type,
+            name: entry.category!.name,
+            type: entry.category!.type,
           },
           nomination: {
             id: entry.nominationId,
-            description: entry.votesToNominations.description,
-            nomineeName: entry.votesToNominations.nominee.name,
-            nomineeTmdbId: entry.votesToNominations.nominee.tmdbId,
-            nomineePosterPath: entry.votesToNominations.nominee.tmdbPosterPath,
+            description: entry.nomination!.description,
+            nomineeName: entry.nomination!.nominee!.name,
+            nomineeTmdbId: entry.nomination!.nominee!.tmdbId,
+            nomineePosterPath: entry.nomination!.nominee!.tmdbPosterPath,
             secondaryNomineeName:
-              entry.votesToNominations.secondaryMovieNominee?.name ?? null,
+              entry.nomination!.secondaryNominee?.name ?? null,
             secondaryNomineeTmdbId:
-              entry.votesToNominations.secondaryMovieNominee?.tmdbId ?? null,
+              entry.nomination!.secondaryNominee?.tmdbId ?? null,
             secondaryNomineePosterPath:
-              entry.votesToNominations.secondaryMovieNominee?.tmdbPosterPath ??
+              entry.nomination!.secondaryNominee?.tmdbPosterPath ??
               null,
-            isWinner: Boolean(entry.votesToNominations.isWinner),
+            isWinner: Boolean(entry.nomination!.isWinner),
           },
         });
       })
-      .sort((a, b) => a.category.id - b.category.id);
+      .sort((a, b) => a.category.id.localeCompare(b.category.id));
   }
 );

@@ -6,8 +6,8 @@ import { votes } from "../schema";
 
 export async function voteForNomination(
   userId: string,
-  categoryId: number,
-  nominationId: number
+  categoryId: string,
+  nominationId: string
 ): Promise<void> {
   await db
     .insert(votes)
@@ -18,7 +18,7 @@ export async function voteForNomination(
       updatedAt: new Date(),
     })
     .onConflictDoUpdate({
-      target: [votes.userId, votes.categoryId],
+      target: [votes.userId, votes.nominationId, votes.categoryId],
       set: { nominationId, updatedAt: new Date() },
     });
 

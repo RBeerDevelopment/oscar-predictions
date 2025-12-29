@@ -4,7 +4,7 @@ import { DoneIcon } from "./done-icon";
 import { Card } from "../ui/card";
 
 export const CategoryElement: FC<{
-  id: number;
+  id: string;
   hasVoted: boolean;
   name: string | null;
 }> = async ({ id, hasVoted, name }) => {

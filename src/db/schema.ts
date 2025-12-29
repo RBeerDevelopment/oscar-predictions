@@ -1,108 +1,71 @@
-import { EntityType } from "@/common/types/entity-type";
-import { relations } from "drizzle-orm";
-import {
-  sqliteTable,
-  text,
-  integer,
-  primaryKey,
-  index,
-} from "drizzle-orm/sqlite-core";
-
-export const nominees = sqliteTable("nominees", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  name: text("name"),
-  tmdbId: text("tmdb_id").unique(),
-  tmdbPosterPath: text("tmdb_poster_path"),
-  tmdbPosterBlurhash: text("tmdb_poster_blurhash"),
-  type: text("type", { enum: EntityType }),
-});
-
-export const nomineesRelations = relations(nominees, ({ many }) => ({
-  nomineesToNominations: many(nominations, { relationName: "nominee" }),
-  nomineesToSecondaryNominations: many(nominations, {
-    relationName: "secondary_nominee",
-  }),
-}));
+import { sqliteTable, integer, text, unique, index } from "drizzle-orm/sqlite-core"
+import { baseColumns, eventTypes, nomineeTypes } from "./utils";
 
 export const categories = sqliteTable("categories", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  name: text("name").unique(),
-  type: text("type", { enum: EntityType }),
+	...baseColumns,
+	name: text().notNull().unique(),
+	type: text({ enum: nomineeTypes }).notNull().default("movie"),
 });
 
-export const categoriesRelations = relations(categories, ({ many }) => ({
-  categoriesToNominations: many(nominations),
-  categoriesToVotes: many(votes),
-}));
+export const academyAwards = sqliteTable("academy_awards", {
+	...baseColumns,
+	ceremonyYear: integer("ceremony_year").notNull().unique(),
+	name: text("name").notNull().unique(),
+	ceremonyDate: text("ceremony_date").notNull(),
+});
+
+export const nominees = sqliteTable("nominees", {
+	...baseColumns,
+	name: text().notNull(),
+	tmdbId: text("tmdb_id").unique(),
+	tmdbPosterPath: text("tmdb_poster_path"),
+	tmdbPosterBlurhash: text("tmdb_poster_blurhash"),
+	type: text({ enum: nomineeTypes }).notNull(),
+	releaseYear: integer("release_year", { mode: "number" }),
+}, (table) => [
+	index("nominees_tmdb_id_idx").on(table.tmdbId),
+	index("nominees_type_idx").on(table.type),
+]);
 
 export const nominations = sqliteTable("nominations", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  nomineeId: integer("nominee_id")
-    .notNull()
-    .references(() => nominees.id),
-  secondaryMovieId: integer("secondary_movie_id").references(() => nominees.id),
-  categoryId: integer("category_id")
-    .notNull()
-    .references(() => categories.id),
-  description: text("description"),
-  isWinner: integer("is_winner"),
-});
+	...baseColumns,
+	nomineeId: text("nominee_id").notNull().references(() => nominees.id),
+	secondaryNomineeId: text("secondary_nominee_id").references(() => nominees.id),
+	categoryId: text("category_id").notNull().references(() => categories.id),
+	acdademyAwardsId: text("acdademy_awards_id").notNull().references(() => academyAwards.id),
+	description: text(),
+	isWinner: integer("is_winner", { mode: "boolean" }).notNull().default(false),
+}, (table) => [
+	unique().on(table.nomineeId, table.categoryId, table.acdademyAwardsId),
+	index("nominations_nominee_id_idx").on(table.nomineeId),
+	index("nominations_category_id_idx").on(table.categoryId),
+	index("nominations_acdademy_awards_id_idx").on(table.acdademyAwardsId),
+]);
 
-export const nominationsRelations = relations(nominations, ({ one, many }) => ({
-  nominee: one(nominees, {
-    relationName: "nominee",
-    fields: [nominations.nomineeId],
-    references: [nominees.id],
-  }),
-  secondaryMovieNominee: one(nominees, {
-    relationName: "secondary_nominee",
-    fields: [nominations.secondaryMovieId],
-    references: [nominees.id],
-  }),
-  category: one(categories, {
-    fields: [nominations.categoryId],
-    references: [categories.id],
-  }),
-  votes: many(votes),
-}));
-
-export const votes = sqliteTable(
-  "votes",
-  {
-    userId: text("user_id").notNull(),
-    nominationId: integer("nomination_id").notNull(),
-    categoryId: integer("category_id").notNull(),
-    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-  },
-  (table) => ({
-    pk: primaryKey({ columns: [table.userId, table.categoryId] }),
-    userIdIndex: index("user_id_index").on(table.userId),
-  })
-);
-
-export const votesRelations = relations(votes, ({ one }) => ({
-  votesToNominations: one(nominations, {
-    fields: [votes.nominationId],
-    references: [nominations.id],
-  }),
-  votesToCategories: one(categories, {
-    fields: [votes.categoryId],
-    references: [categories.id],
-  }),
-}));
+export const votes = sqliteTable("votes", {
+	...baseColumns,
+	userId: text("user_id").notNull(),
+	nominationId: text("nomination_id").notNull().references(() => nominations.id),
+	categoryId: text("category_id").notNull().references(() => categories.id),
+}, (table) => [
+	unique().on(table.userId, table.nominationId, table.categoryId),
+	index("votes_user_id_idx").on(table.userId),
+	index("votes_nomination_id_idx").on(table.nominationId),
+	index("votes_category_id_idx").on(table.categoryId),
+]);
 
 export const feedback = sqliteTable("feedback", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  feedback: text("feedback").notNull(),
-  email: text("email"),
-  createdAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+	...baseColumns,
+	feedback: text("feedback").notNull(),
+	email: text("email"),
 });
 
-const logginEventTypes = ["signin-button"] as const;
-export type LoggingEventType = (typeof logginEventTypes)[number];
-
-export const logging = sqliteTable("logging", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  event: text("event", { enum: logginEventTypes }).notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-});
+export const eventLogs = sqliteTable("event_logs", {
+	...baseColumns,
+	eventType: text("event_type", { enum: eventTypes }).notNull(),
+	userId: text("user_id").notNull(),
+	data:  text('data', { mode: 'json' }).notNull().default("{}"),
+}, (table) => [
+	index("event_logs_event_type_idx").on(table.eventType),
+	index("event_logs_user_id_idx").on(table.userId),
+]);

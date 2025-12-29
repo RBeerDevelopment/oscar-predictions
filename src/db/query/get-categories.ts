@@ -5,7 +5,7 @@ export const getCategories = cache(async (userId: string) => {
   const [categories, categoriesIdsWithVote] = await Promise.all([
     db.query.categories.findMany(),
     db.query.votes.findMany({
-      where: (votes, { eq }) => eq(votes.userId, userId),
+      where: { userId },
       columns: {
         categoryId: true,
       },

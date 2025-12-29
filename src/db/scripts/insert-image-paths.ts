@@ -6,13 +6,13 @@ import { EntityType } from "@/common/types/entity-type";
 
 async function insertPosterPaths() {
   console.time("insert");
-  const data = await db.query.nominees.findMany({
-    columns: {
-      tmdbId: true,
-      type: true,
-    },
-    where: and(isNull(nominees.tmdbPosterPath), ne(nominees.type, "song")),
-  });
+  const data = await db
+    .select({
+      tmdbId: nominees.tmdbId,
+      type: nominees.type,
+    })
+    .from(nominees)
+    .where(and(isNull(nominees.tmdbPosterPath), ne(nominees.type, "song")));
 
   if (!data) return;
   const entries = data.map((entry) => ({

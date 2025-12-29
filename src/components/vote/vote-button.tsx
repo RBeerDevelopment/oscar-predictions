@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 import { isAfterCeremony, isAfterCeremonyStart } from "@/common/utils/is-after";
 
 export const VoteButton: FC<{
-  categoryId: number;
-  nominationId: number;
+  categoryId: string;
+  nominationId: string;
   isExistingVote: boolean;
   className?: string;
 }> = ({ categoryId, nominationId, isExistingVote, className }) => {

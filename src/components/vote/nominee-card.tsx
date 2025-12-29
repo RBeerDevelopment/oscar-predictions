@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Card } from "@/components/ui/card";
-import { Nominee } from "@/common/types/nominee";
+import { NominationWithNominee } from "@/types";
 import Image from "next/image";
 import { VoteButton } from "./vote-button";
 import { buildImageUrl } from "@/common/utils/build-image-url";
@@ -8,11 +8,11 @@ import { blurHashToDataURL } from "@/common/utils/blurhash-to-data-url";
 import { WinningMedal } from "../winning-medal";
 
 export const NomineeCard: FC<{
-  categoryId: number;
-  nominee: Nominee;
+  categoryId: string;
+  nominee: NominationWithNominee;
   isExistingVote: boolean;
 }> = async ({ categoryId, nominee, isExistingVote }) => {
-  const blurhashUrl = blurHashToDataURL(nominee.posterBlurhash ?? "");
+  const blurhashUrl = blurHashToDataURL(nominee.nominee?.tmdbPosterBlurhash ?? "");
   return (
     <Card
       className={`relative flex flex-col gap-2 p-0 hover:shadow-lg transition-shadow ${
@@ -22,25 +22,27 @@ export const NomineeCard: FC<{
       {nominee.isWinner ? (
         <WinningMedal className="absolute top-1 right-1" />
       ) : null}
-      <a
-        className="w-full"
-        key={nominee.tmdbId}
-        href={`https://www.themoviedb.org/${nominee.type}/${nominee.tmdbId}`}
-        target="_blank"
-      >
-        <Image
-          className="rounded-t-md w-full"
-          src={buildImageUrl(nominee.tmdbPosterPath, true)}
-          alt={`Poster of ${nominee.name}`}
-          blurDataURL={blurhashUrl}
-          placeholder="blur"
-          width={400}
-          height={600}
-        />
-      </a>
+      {nominee.nominee?.tmdbId && (
+        <a
+          className="w-full"
+          key={nominee.nominee.tmdbId}
+          href={`https://www.themoviedb.org/movie/${nominee.nominee.tmdbId}`}
+          target="_blank"
+        >
+          <Image
+            className="rounded-t-md w-full"
+            src={buildImageUrl(nominee.nominee.tmdbPosterPath, true)}
+            alt={`Poster of ${nominee.nominee.name}`}
+            blurDataURL={blurhashUrl}
+            placeholder="blur"
+            width={400}
+            height={600}
+          />
+        </a>
+      )}
 
       <div className="flex flex-col items-center text-center p-4 gap-2 h-full min-h-[10rem]">
-        <h4 className="text-xl font-bold">{nominee.name}</h4>
+        <h4 className="text-xl font-bold">{nominee.nominee?.name ?? "Unknown"}</h4>
         <p className="text-xs ">{nominee.description}</p>
 
         <VoteButton

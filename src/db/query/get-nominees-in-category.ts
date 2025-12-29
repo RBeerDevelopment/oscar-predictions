@@ -1,31 +1,26 @@
-import { Nominee } from "@/common/types/nominee";
 import { db } from "../db";
 import { cache } from "react";
-import { EntityType } from "@/common/types/entity-type";
+import { NominationWithNominee } from "@/types";
+
+const isNominationWithNominee = (nomination: unknown): nomination is NominationWithNominee => {
+  return nomination !== null && (nomination as NominationWithNominee)?.nominee?.id !== null;
+};
 
 export const getNomineesInCategory = cache(
-  async (categoryId: number): Promise<Nominee[]> => {
+  async (categoryId: string): Promise<NominationWithNominee[]> => {
     const data = await db.query.nominations.findMany({
-      where: (nominations, { eq }) => eq(nominations.categoryId, categoryId),
-      with: { nominee: true, category: true },
+      where: { categoryId: categoryId },
+      with: { nominee: true },
     });
 
-    const dataWithValues = data.filter(
-      (entry) =>
-        entry.nominee.name !== null &&
-        entry.category.type !== null &&
-        entry.nominee.tmdbId !== null
-    );
+    const dataWithValues = data
+      .filter(isNominationWithNominee)
+      .map((nomination) => ({
+        ...nomination,
+        nominationId: nomination.id,
+        tmdbId: nomination.nominee?.tmdbId ?? null,
+      }));
 
-    return dataWithValues.map((entry) => ({
-      nominationId: entry.id,
-      name: entry.nominee.name ?? "",
-      description: entry.description ?? "",
-      type: (entry.category.type ?? "movie") as EntityType,
-      tmdbPosterPath: entry.nominee.tmdbPosterPath,
-      posterBlurhash: entry.nominee.tmdbPosterBlurhash,
-      tmdbId: entry.nominee.tmdbId ?? "",
-      isWinner: Boolean(entry.isWinner),
-    }));
+    return dataWithValues ?? [];
   }
 );

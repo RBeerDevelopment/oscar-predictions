@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { FC } from "react";
 import { CategorySidebar } from "./category-sidebar";
 
-export const CategorySidebarWrapper: FC<{ categoryId: number }> = async ({
+export const CategorySidebarWrapper: FC<{ categoryId: string }> = async ({
   categoryId,
 }) => {
   const { userId } = await auth();

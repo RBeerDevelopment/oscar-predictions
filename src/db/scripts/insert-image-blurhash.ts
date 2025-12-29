@@ -7,8 +7,15 @@ import { and, eq, isNotNull, isNull } from "drizzle-orm";
 
 async function getImageBuffer(source: string) {
   const response = await fetch(source);
+
+  if(!response.ok) {
+    console.error(`Failed to fetch image: ${source}`);
+    return null;
+  }
   const arrayBuffer = await response.arrayBuffer();
   const returnedBuffer = Buffer.from(arrayBuffer);
+
+  console.log(response)
 
   const { info, data } = await sharp(returnedBuffer)
     .resize(16, 24, {
@@ -33,16 +40,13 @@ async function getImageBuffer(source: string) {
 
 async function insertImageBlurhash() {
   console.time("insert");
-  const data = await db.query.nominees.findMany({
-    columns: {
-      tmdbPosterPath: true,
-      id: true,
-    },
-    where: and(
-      isNull(nominees.tmdbPosterBlurhash),
-      isNotNull(nominees.tmdbPosterPath)
-    ),
-  });
+  const data = await db
+    .select({
+      tmdbPosterPath: nominees.tmdbPosterPath,
+      id: nominees.id,
+    })
+    .from(nominees)
+    .where(and(isNull(nominees.tmdbPosterBlurhash), isNotNull(nominees.tmdbPosterPath)));
 
   if (!data) return;
   const entries = data.map((entry) => ({

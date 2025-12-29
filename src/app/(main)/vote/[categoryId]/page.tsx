@@ -13,8 +13,8 @@ export default async function VotePage({
 }: {
   params: Promise<{ categoryId: string }>;
 }) {
-  const categoryId = Number((await params).categoryId);
-  if (isNaN(categoryId)) {
+  const categoryId = (await params).categoryId;
+  if (!categoryId) {
     redirect("/vote");
   }
 

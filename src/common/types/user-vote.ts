@@ -3,12 +3,12 @@ import { EntityType } from "./entity-type";
 
 export const UserVote = z.object({
   category: z.object({
-    id: z.number(),
+    id: z.string(),
     name: z.string().nullable(),
     type: z.enum(EntityType).nullable(),
   }),
   nomination: z.object({
-    id: z.number(),
+    id: z.string(),
     description: z.string().nullable(),
     nomineeName: z.string().nullable(),
     nomineeTmdbId: z.string().nullable(),

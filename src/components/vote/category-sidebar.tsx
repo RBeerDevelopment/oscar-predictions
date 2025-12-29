@@ -7,7 +7,7 @@ import type { EntityType } from "@/common/types/entity-type";
 
 type Category = {
   hasVoted: boolean;
-  id: number;
+  id: string;
   name: string | null;
   type: EntityType | null;
 };
@@ -15,7 +15,7 @@ type Category = {
 const STORAGE_KEY = "category-sidebar-scroll";
 
 export const CategorySidebar: FC<{
-  categoryId: number;
+  categoryId: string;
   categories: Category[];
 }> = ({ categoryId, categories }) => {
   const containerRef = useRef<HTMLDivElement>(null);
