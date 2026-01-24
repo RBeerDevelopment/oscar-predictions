@@ -18,6 +18,8 @@ import { isAfterCeremony } from "@/common/utils/is-after";
 export default async function DashboardPage() {
   const { userId } = await auth();
 
+  const isVotingOver = await isAfterCeremony();
+
   return (
     <div className="flex flex-col w-full h-full">
       <Carousel
@@ -25,7 +27,7 @@ export default async function DashboardPage() {
         opts={{ loop: true }}
       >
         <CarouselContent>
-          {isAfterCeremony() ? (
+          {isVotingOver ? (
             <CarouselItem className="md:basis-1/3">
               <DashboardCard title="Correct predictions">
                 <Suspense fallback={<Skeleton className="h-full w-10" />}>
