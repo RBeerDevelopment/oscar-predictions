@@ -1,5 +1,4 @@
 import { HeroSection } from "@/components/home/hero-section";
-import { AcademyAwardsSection } from "@/components/home/academy-awards-section";
 import { LandingHeader } from "@/components/landing-header";
 
 export const dynamic = "force-static";
@@ -9,7 +8,6 @@ export default async function Home() {
     <div className="h-full flex flex-col items-center overflow-y-scroll bg-white">
       <LandingHeader />
       <HeroSection />
-      <AcademyAwardsSection />
     </div>
   );
 }

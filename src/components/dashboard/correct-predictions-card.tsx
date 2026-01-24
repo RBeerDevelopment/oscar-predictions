@@ -23,7 +23,7 @@ export const CorrectPredictionsCard: FC<{
   return (
     <div className="w-full flex flex-col items-center gap-4">
       <div className="zigzag bg-pink-500 w-1/2 aspect-square text-white text-4xl flex items-center justify-center">
-        {Number(nrOfWinners)}/23
+        {Number(nrOfWinners)}/24
       </div>
       <Table divClassName="no-scrollbar max-h-full" className="no-scrollbar">
         <TableHeader>

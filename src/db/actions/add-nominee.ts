@@ -8,6 +8,8 @@ import { EntityType } from "@/common/types/entity-type";
 export async function addNominee(
   name: string,
   tmdbId: string | null,
+  releaseDate: string | null,
+  posterPath: string | null,
   type: EntityType
 ): Promise<{ success: boolean; error?: string }> {
   try {
@@ -47,6 +49,8 @@ export async function addNominee(
     await db.insert(nominees).values({
       name,
       tmdbId: tmdbId || null,
+      tmdbPosterPath: posterPath || null,
+      releaseYear: releaseDate ? new Date(releaseDate).getFullYear() : null,
       type,
     });
 

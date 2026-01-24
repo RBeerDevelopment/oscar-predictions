@@ -11,7 +11,8 @@ export const NomineeCard: FC<{
   categoryId: string;
   nominee: NominationWithNominee;
   isExistingVote: boolean;
-}> = async ({ categoryId, nominee, isExistingVote }) => {
+  isVotingOver: boolean;
+}> = async ({ categoryId, nominee, isExistingVote, isVotingOver }) => {
   const blurhashUrl = blurHashToDataURL(nominee.nominee?.tmdbPosterBlurhash ?? "");
   return (
     <Card
@@ -46,6 +47,7 @@ export const NomineeCard: FC<{
         <p className="text-xs ">{nominee.description}</p>
 
         <VoteButton
+          isVotingOver={isVotingOver}
           isExistingVote={isExistingVote}
           categoryId={categoryId}
           nominationId={nominee.nominationId}

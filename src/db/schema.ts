@@ -47,8 +47,9 @@ export const votes = sqliteTable("votes", {
 	userId: text("user_id").notNull(),
 	nominationId: text("nomination_id").notNull().references(() => nominations.id),
 	categoryId: text("category_id").notNull().references(() => categories.id),
+	academyAwardsId: text("academy_awards_id").notNull().references(() => academyAwards.id),
 }, (table) => [
-	unique().on(table.userId, table.nominationId, table.categoryId),
+	unique().on(table.userId, table.categoryId, table.academyAwardsId),
 	index("votes_user_id_idx").on(table.userId),
 	index("votes_nomination_id_idx").on(table.nominationId),
 	index("votes_category_id_idx").on(table.categoryId),

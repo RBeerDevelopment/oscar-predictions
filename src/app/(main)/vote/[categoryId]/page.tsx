@@ -7,6 +7,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getCategories } from "@/db/query/get-categories";
 import { CategorySelect } from "@/components/vote/category-select";
 import { CategorySidebarWrapper } from "@/components/vote/category-sidebar-wrapper";
+import { isAfterCeremony } from "@/common/utils/is-after";
 
 export default async function VotePage({
   params,
@@ -17,6 +18,8 @@ export default async function VotePage({
   if (!categoryId) {
     redirect("/vote");
   }
+
+  const isVotingOver = await isAfterCeremony();
 
   const { userId } = await auth();
 
@@ -42,6 +45,7 @@ export default async function VotePage({
           {nomineesInCategory.map((nominee) => (
             <NomineeCard
               key={nominee.tmdbId}
+              isVotingOver={isVotingOver}
               categoryId={categoryId}
               nominee={nominee}
               isExistingVote={existingUserVote === nominee.nominationId}

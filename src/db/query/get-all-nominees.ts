@@ -11,15 +11,15 @@ export const getAllNominees = cache(async () => {
       tmdbPosterPath: true,
     },
     where: { 
-      nominations: {
-        academyAward: {
-          ceremonyYear: 2026
-        }
-      }
+      OR: [
+        { releaseYear: 2025 },
+        { releaseYear: 2024 },
+        { releaseYear: { isNull: true } },
+      ]
     },
-    // where: (nominees, { eq }) => eq(nominees.year, "2026"),
     orderBy: { "name": "asc" }
   });
+
 
   return nomineesList;
 });

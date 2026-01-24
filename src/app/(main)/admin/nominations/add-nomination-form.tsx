@@ -1,11 +1,12 @@
 "use client";
 
-import { FC, useState } from "react";
+import { FC, useState, useMemo } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Combobox, ComboboxOption } from "@/components/ui/combobox";
 import { addNomination } from "@/db/actions/add-nomination";
 import { toast } from "sonner";
 import { EntityType } from "@/common/types/entity-type";
@@ -26,16 +27,68 @@ type NominationEntry = {
   year: "2024" | "2025" | "2026";
 };
 
+const DEFAULT_NOMINATIONS = [
+  {
+    nomineeId: "",
+    secondaryNomineeId: null,
+    description: "",
+    year: "2026",
+  },
+  {
+    nomineeId: "",
+    secondaryNomineeId: null,
+    description: "",
+    year: "2026",
+  },
+  {
+    nomineeId: "",
+    secondaryNomineeId: null,
+    description: "",
+    year: "2026",
+  },
+  {
+    nomineeId: "",
+    secondaryNomineeId: null,
+    description: "",
+    year: "2026",
+  },
+  {
+    nomineeId: "",
+    secondaryNomineeId: null,
+    description: "",
+    year: "2026",
+  },
+] as const satisfies NominationEntry[];
+
 export const AddNominationForm: FC<{
   categories: MinimalCategory[];
   nominees: Nominee[];
 }> = ({ categories, nominees }) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>();
-  const [nominations, setNominations] = useState<NominationEntry[]>([]);
+  const [nominations, setNominations] = useState<NominationEntry[]>(DEFAULT_NOMINATIONS);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const movies = nominees.filter((n) => n.type === "movie");
   const people = nominees.filter((n) => n.type === "person");
+
+  const nomineeOptions: ComboboxOption[] = useMemo(() => {
+    const movieOptions: ComboboxOption[] = movies.map((movie) => ({
+      value: movie.id,
+      label: `🎬 ${movie.name}`,
+    }));
+    const peopleOptions: ComboboxOption[] = people.map((person) => ({
+      value: person.id,
+      label: `👤 ${person.name}`,
+    }));
+    return [...movieOptions, ...peopleOptions];
+  }, [movies, people]);
+
+  const movieOptions: ComboboxOption[] = useMemo(() => {
+    return movies.map((movie) => ({
+      value: movie.id,
+      label: movie.name || "",
+    }));
+  }, [movies]);
 
   const addNominationEntry = () => {
     setNominations([
@@ -128,7 +181,7 @@ export const AddNominationForm: FC<{
             value={selectedCategoryId || undefined}
             onValueChange={(value) => {
               setSelectedCategoryId(value);
-              setNominations([]);
+              setNominations(DEFAULT_NOMINATIONS);
             }}
           >
             <SelectTrigger id="category">
@@ -179,7 +232,8 @@ export const AddNominationForm: FC<{
 
                     <div className="space-y-2">
                       <Label>Nominee</Label>
-                      <Select
+                      <Combobox
+                        options={nomineeOptions}
                         value={nomination.nomineeId || undefined}
                         onValueChange={(value) => {
                           updateNomination(index, {
@@ -187,31 +241,10 @@ export const AddNominationForm: FC<{
                             secondaryNomineeId: null, // Reset when changing nominee
                           });
                         }}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a nominee" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {movies.length > 0 && (
-                            <>
-                              {movies.map((movie) => (
-                                <SelectItem key={movie.id} value={movie.id}>
-                                  🎬 {movie.name}
-                                </SelectItem>
-                              ))}
-                            </>
-                          )}
-                          {people.length > 0 && (
-                            <>
-                              {people.map((person) => (
-                                <SelectItem key={person.id} value={person.id}>
-                                  👤 {person.name}
-                                </SelectItem>
-                              ))}
-                            </>
-                          )}
-                        </SelectContent>
-                      </Select>
+                        placeholder="Select a nominee"
+                        searchPlaceholder="Search nominees..."
+                        emptyMessage="No nominees found."
+                      />
                     </div>
 
                     {selectedNominee && (
@@ -235,7 +268,8 @@ export const AddNominationForm: FC<{
                     {isPerson && (
                       <div className="space-y-2">
                         <Label>Movie (Optional)</Label>
-                        <Select
+                        <Combobox
+                          options={movieOptions}
                           value={
                             nomination.secondaryNomineeId
                               ? nomination.secondaryNomineeId
@@ -243,21 +277,13 @@ export const AddNominationForm: FC<{
                           }
                           onValueChange={(value) => {
                             updateNomination(index, {
-                              secondaryNomineeId: value,
+                              secondaryNomineeId: value === "" ? null : value,
                             });
                           }}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a movie" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {movies.map((movie) => (
-                              <SelectItem key={movie.id} value={movie.id}>
-                                {movie.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                          placeholder="Select a movie"
+                          searchPlaceholder="Search movies..."
+                          emptyMessage="No movies found."
+                        />
                       </div>
                     )}
 

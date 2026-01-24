@@ -6,6 +6,7 @@ export default async function AddNominationPage() {
   const [categories, nominees] = await Promise.all([
     db.query.categories.findMany({
       columns: { id: true, name: true },
+      orderBy: { name: "asc" },
     }),
     getAllNominees(),
   ]);

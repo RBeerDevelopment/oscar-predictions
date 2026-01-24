@@ -27,6 +27,10 @@ export const relations = defineRelations(schema, (r) => ({
 			from: r.academyAwards.id,
 			to: r.nominations.acdademyAwardsId,
 		}),
+		votes: r.many.votes({
+			from: r.academyAwards.id,
+			to: r.votes.academyAwardsId,
+		}),
 	},
 	nominations: {
 		nominee: r.one.nominees({
@@ -58,6 +62,10 @@ export const relations = defineRelations(schema, (r) => ({
 		category: r.one.categories({
 			from: r.votes.categoryId,
 			to: r.categories.id,
+		}),
+		academyAward: r.one.academyAwards({
+			from: r.votes.academyAwardsId,
+			to: r.academyAwards.id,
 		}),
 	},
 }))

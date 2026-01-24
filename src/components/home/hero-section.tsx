@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import OscarLogo from '../../../public/oscars-logo.webp'
+import SinnersPoster from '../../../public/sinners.webp'
 
 export const HeroSection: FC = () => {
   return (
@@ -11,10 +11,10 @@ export const HeroSection: FC = () => {
         <div className="flex flex-col items-center justify-center space-y-6 text-center">
           <div className="space-y-4">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-black">
-              Vote for the Oscars.
+              Give Your Predictions for the {new Date().getFullYear()} Oscars.
             </h1>
             <p className="mx-auto max-w-[700px] text-gray-600 text-lg md:text-xl">
-              Choose your favorites and make them winners.
+              Choose your favorites and see how your predictions compare to everyone else.
             </p>
           </div>
           <Link href="/vote">
@@ -23,7 +23,7 @@ export const HeroSection: FC = () => {
             </Button>
           </Link>
           <div className="w-full max-w-4xl h-64 md:h-96 bg-gray-200 rounded-xl mt-8 overflow-hidden relative">
-            <Image src={OscarLogo} alt="Hero Image" fill className="object-cover" />
+            <Image src={SinnersPoster} alt="Hero Image" fill className="object-cover" />
           </div>
         </div>
       </div>

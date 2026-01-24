@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useCallback, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,9 +21,10 @@ export const AddNomineeSearch: FC<Props> = ({ existingTmdbIds }) => {
   const [searchType, setSearchType] = useState<EntityType>("movie");
   const [searchResults, setSearchResults] = useState<TMDBSearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [isAdding, setIsAdding] = useState(false);
+  const [currentlyAdding, setCurrentlyAdding] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
   const [movieDetails, setMovieDetails] = useState<Record<number, MovieDetails>>({});
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const [nomineeTmdbIds, setNomineeTmdbIds] = useState<string[]>(existingTmdbIds);
 
@@ -44,6 +45,7 @@ export const AddNomineeSearch: FC<Props> = ({ existingTmdbIds }) => {
       console.error(error);
     } finally {
       setIsSearching(false);
+      searchInputRef.current?.blur();
     }
   };
 
@@ -53,9 +55,9 @@ export const AddNomineeSearch: FC<Props> = ({ existingTmdbIds }) => {
       return;
     }
 
-    setIsAdding(true);
+    setCurrentlyAdding("song");
     try {
-      const response = await addNominee(searchQuery.trim(), null, "song");
+      const response = await addNominee(searchQuery.trim(), null, null, null, "song");
       
       if (response.success) {
         toast.success(`Successfully added "${searchQuery.trim()}" to nominees`);
@@ -67,28 +69,32 @@ export const AddNomineeSearch: FC<Props> = ({ existingTmdbIds }) => {
       toast.error("Failed to add song");
       console.error(error);
     } finally {
-      setIsAdding(false);
+      setCurrentlyAdding(null);
+      searchInputRef.current?.focus();
     }
   };
 
-  const handleAddNominee = async (result: TMDBSearchResult) => {
+  const handleAddNominee = useCallback(async (result: TMDBSearchResult) => {
     const name = searchType === "movie" ? result.title : result.name;
     if (!name || !result.id) {
       toast.error("Invalid result data");
       return;
     }
 
-    setIsAdding(true);
+    setCurrentlyAdding(result.id.toString()); 
     try {
       const entityType: EntityType = searchType as EntityType;
-      const response = await addNominee(name, String(result.id), entityType);
+      const response = await addNominee(name, String(result.id), 
+        result.release_date ?? null, 
+        result.poster_path ?? null,
+        entityType);
       
       if (response.success) {
         toast.success(`Successfully added ${name} to nominees`);
         setSearchQuery("");
         setSearchResults([]);
         setHasSearched(false);
-        setNomineeTmdbIds([...nomineeTmdbIds, String(result.id)]);
+        setNomineeTmdbIds((prev) => [...prev, String(result.id)]);
       } else {
         toast.error(response.error || "Failed to add nominee");
       }
@@ -96,9 +102,10 @@ export const AddNomineeSearch: FC<Props> = ({ existingTmdbIds }) => {
       toast.error("Failed to add nominee");
       console.error(error);
     } finally {
-      setIsAdding(false);
+      setCurrentlyAdding(null);
+      searchInputRef.current?.focus();
     }
-  };
+  }, [searchType]);
 
   const getImagePath = (result: TMDBSearchResult) => {
     if (searchType === "movie") {
@@ -144,6 +151,53 @@ export const AddNomineeSearch: FC<Props> = ({ existingTmdbIds }) => {
     }
   }, [searchResults, searchType]);
 
+  // Handle keyboard shortcuts for adding nominees (1-9)
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in an input field
+      const activeElement = document.activeElement;
+      if (activeElement?.tagName === "INPUT" || activeElement?.tagName === "TEXTAREA") {
+        return;
+      }
+
+      // Check if a number key (1-9) was pressed
+      const keyNumber = parseInt(e.key);
+      if (isNaN(keyNumber) || keyNumber < 1 || keyNumber > 9) {
+        return;
+      }
+
+      // Check if search results exist and the index is valid
+      if (searchResults.length === 0 || searchResults.length < keyNumber) {
+        return;
+      }
+
+      // Don't trigger if currently adding a nominee
+      if (currentlyAdding) {
+        return;
+      }
+
+      // Get the result at the corresponding index (1-based to 0-based)
+      const result = searchResults[keyNumber - 1];
+      if (!result) {
+        return;
+      }
+
+      // Check if nominee already exists
+      if (existingTmdbIds.includes(String(result.id))) {
+        toast.error("Nominee already exists");
+        return;
+      }
+
+      // Add the nominee
+      handleAddNominee(result);
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [searchResults, currentlyAdding, existingTmdbIds, handleAddNominee]);
+
   return (
     <Card className="w-full max-w-2xl">
       <CardHeader>
@@ -178,6 +232,7 @@ export const AddNomineeSearch: FC<Props> = ({ existingTmdbIds }) => {
           <Input
             placeholder={searchType === "song" ? "Enter song title..." : `Search for a ${searchType}...`}
             value={searchQuery}
+            ref={searchInputRef}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -191,8 +246,8 @@ export const AddNomineeSearch: FC<Props> = ({ existingTmdbIds }) => {
             className="flex-1"
           />
           {searchType === "song" ? (
-            <Button onClick={handleAddSong} disabled={isAdding || !searchQuery.trim()}>
-              {isAdding ? "Adding..." : "Add Song"}
+            <Button onClick={handleAddSong} disabled={Boolean(currentlyAdding) || !searchQuery.trim()}>
+              {currentlyAdding === "song" ? "Adding..." : "Add Song"}
             </Button>
           ) : (
             <Button onClick={handleSearch} disabled={isSearching || !searchQuery.trim()}>
@@ -266,10 +321,10 @@ export const AddNomineeSearch: FC<Props> = ({ existingTmdbIds }) => {
                           handleAddNominee(result);
                         }}
                         className={cn(existingTmdbIds.includes(String(result.id)) ? "opacity-50 cursor-not-allowed" : "")}
-                        disabled={isAdding}
+                        disabled={Boolean(currentlyAdding) || existingTmdbIds.includes(String(result.id))}
                         size="sm"
                       >
-                        {isAdding ? "Adding..." : "Add"}
+                        {currentlyAdding === result.id.toString() ? "Adding..." : existingTmdbIds.includes(String(result.id)) ? "Already Added" : "Add"}
                       </Button>
                     </div>
                   </Card>

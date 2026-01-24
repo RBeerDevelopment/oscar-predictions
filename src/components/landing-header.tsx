@@ -9,21 +9,10 @@ export const LandingHeader: FC = async () => {
         <Link href="/" className="flex items-center gap-2">
           <span className="font-semibold text-xl text-black">Oscar Predictions</span>
         </Link>
-        <div className="flex flex-row gap-6 hidden md:flex">
-          <Link href="#how-it-works" className="text-gray-600 hover:text-gray-900 text-lg">
-            How It Works
-          </Link>
-          <Link href="/dashboard" className="text-gray-600 hover:text-gray-900 text-lg">
-            Statistics
-          </Link>
-          <Link href="/vote" className="text-gray-600 hover:text-gray-900 text-lg">
-            Play Now
-          </Link>
-        </div>
       </div>
       <Link href="/dashboard">
         <Button className="bg-black text-white hover:bg-gray-800 rounded-lg px-6">
-          Sign Up
+          Sign In
         </Button>
       </Link>
     </nav>

@@ -1,12 +1,12 @@
 "use client";
-import { isAfterCeremony } from "@/common/utils/is-after";
 import { FC, useEffect } from "react";
 import { toast } from "sonner";
 
-export const AfterCeremonyToast: FC = () => {
+export const AfterCeremonyToast: FC<{ isVotingOver: boolean }> = ({ isVotingOver }) => {
   useEffect(() => {
-    const isVotingOver = isAfterCeremony();
+    
     if (!isVotingOver) return;
+    
     toast(
       "Voting is over! 🎉 Check your scores after the ceremony and come back next year!",
       {
@@ -14,6 +14,6 @@ export const AfterCeremonyToast: FC = () => {
         dismissible: false,
       }
     );
-  }, []);
+  }, [isVotingOver]);
   return null;
 };
